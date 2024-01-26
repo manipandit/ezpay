@@ -17,6 +17,11 @@ app.use(express.json());
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/account", accountRouter);
 
+// healthy checks
+app.get("/", (req, res) => {
+  res.send("Healthy");
+});
+
 // start server
 app.listen(process.env.PORT || 3000, () => {
   console.log("listening on port " + process.env.PORT);
