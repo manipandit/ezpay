@@ -73,7 +73,7 @@ const SendMoney = ({ user, setShowSetMoney }) => {
         </div>
       </div>
       <div className="mt-10 flex flex-col gap-y-2">
-        <p className="text-sm font-medium px-6">Amount (in Rs)</p>
+        <p className="text-sm font-medium px-6">Amount </p>
         <div className="px-6">
           <input
             type="text"
