@@ -20,14 +20,14 @@ const User = ({ user }) => {
           <div className="text-lg font-bold">
             <span className="capitalize">{firstName}</span>{" "}
             <span className="capitalize">{lastName}</span>{" "}
-            <span className="lowercase text-sm font-extralight bg-gray-100 border border-slate-50">
+            <span className="hidden md:flex lowercase text-sm font-extralight bg-gray-100 border border-slate-50">
               {username}
             </span>
           </div>
         </div>
         <div>
           <button
-            className="w-full text-sm bg-black text-white py-3 px-4 rounded-md"
+            className="w-full text-sm bg-black text-white py-3 px-2 md:px-4 rounded-md"
             onClick={() => setShowSetMoney(!showSetMoney)}
           >
             Send Money

@@ -35,8 +35,8 @@ const Signup = () => {
     }
   };
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-gray-200">
-      <div className="w-[380px] h-[600px] bg-slate-50 rounded-md py-4 px-8">
+    <div className="h-screen w-full flex items-center justify-center absolute top-0 z-[-2]  transform bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(252,205,238,.5)_100%)]">
+      <div className="w-[350px]  md:w-[380px] h-[600px] bg-slate-50 rounded-md py-4 px-8 border border-slate-300">
         <div className="text-center text-3xl font-extrabold ">Sign Up</div>
         <p className="text-center text-base  text-gray-600 pt-2 font-medium">
           Enter your information to create an account

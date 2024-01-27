@@ -115,11 +115,13 @@ const Dashboard = () => {
   };
   return (
     <div className="w-full ">
-      <div className="h-16 p-4 border-b  ">
-        <div className="flex justify-between items-center px-4">
-          <div className="text-2xl font-extrabold">EZ Payments</div>
-          <div className="flex gap-x-20 items-center">
-            <div className="text-base font-medium flex items-center gap-x-2">
+      <div className="h-20 md:h-16 p-2 md:p-4 border-b  ">
+        <div className="flex justify-between items-center px-2 md:px-4">
+          <div className="text-base md:text-2xl font-extrabold">
+            EZ Payments
+          </div>
+          <div className="flex gap-x-20 items-center ml-8 md:ml-0">
+            <div className="text-xs md:text-base font-medium flex items-center gap-x-2">
               Hello,{" "}
               <span className="font-bold capitalize">
                 {currentUserValue?.firstName}{" "}
@@ -137,7 +139,7 @@ const Dashboard = () => {
             </div>
             <div>
               <button
-                className="w-full text-sm bg-black text-white px-4 py-2 rounded-md"
+                className="w-fit md:w-full text-sm bg-black text-white px-2 md:px-4 py-2 rounded-md"
                 onClick={logout}
               >
                 Logout
@@ -149,7 +151,9 @@ const Dashboard = () => {
 
       {/* balance */}
       <div className="p-4 flex gap-x-4 items-center">
-        <div className="text-xl font-bold px-4">Your Balance</div>
+        <div className="text-xl font-bold px-4 text-center md:text-left">
+          Your Balance
+        </div>
         <div>
           <span className="text-xl font-bold">${balanceValue.toFixed(4)}</span>
         </div>
