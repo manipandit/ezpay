@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { signupAtom } from "../store/userAtom";
 import { useRecoilState } from "recoil";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { ScaleLoader } from "react-spinners";
 
 const Signup = () => {
   const [signupValue, setSignupValue] = useRecoilState(signupAtom);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const signup = async () => {
     try {
+      setIsLoading(true);
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${baseUrl}/user/signup`, {
         method: "POST",
@@ -31,7 +34,10 @@ const Signup = () => {
         navigate("/signin");
       }
     } catch (error) {
+      setIsLoading(false);
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -122,13 +128,17 @@ const Signup = () => {
             />
           </div>
 
-          <button
-            className="w-full rounded-md bg-black text-white p-2
+          {isLoading ? (
+            <ScaleLoader color="black" className="flex justify-center" />
+          ) : (
+            <button
+              className="w-full rounded-md bg-black text-white p-2
           "
-            onClick={signup}
-          >
-            Sign Up
-          </button>
+              onClick={signup}
+            >
+              Sign Up
+            </button>
+          )}
           <p className="text-center font-semibold">
             Already have an account?{" "}
             <span className="underline">

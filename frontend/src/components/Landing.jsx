@@ -29,6 +29,12 @@ const Landing = () => {
             >
               Sign In
             </button>
+            <button
+              className="bg-slate-50 hover:bg-slate-100 px-4 py-2 border border-gray-400 rounded-lg"
+              onClick={() => navigate("/dashboard")}
+            >
+              Go to Dashboard
+            </button>
           </div>
         </div>
       </div>

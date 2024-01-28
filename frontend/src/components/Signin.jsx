@@ -3,13 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { signinAtom } from "../store/userAtom";
 import { useRecoilState } from "recoil";
 import toast from "react-hot-toast";
+import { ScaleLoader } from "react-spinners";
 
 const Signin = () => {
   const [signinValue, setSigninValue] = useRecoilState(signinAtom);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const signin = async () => {
     try {
+      setIsLoading(true);
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${baseUrl}/user/signin`, {
         method: "POST",
@@ -32,7 +36,10 @@ const Signin = () => {
         setIsPasswordCorrect(!isPasswordCorrect);
       }
     } catch (error) {
+      setIsLoading(false);
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -85,13 +92,17 @@ const Signin = () => {
               }}
             />
           </div>
-          <button
-            className="w-full rounded-md bg-black text-white p-2
+          {isLoading ? (
+            <ScaleLoader color="black" className="flex justify-center" />
+          ) : (
+            <button
+              className="w-full rounded-md bg-black text-white p-2
           "
-            onClick={signin}
-          >
-            Sign In
-          </button>
+              onClick={signin}
+            >
+              Sign In
+            </button>
+          )}
           <p className="text-center font-semibold">
             Don't have an account?
             <span className="underline">

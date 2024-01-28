@@ -11,6 +11,7 @@ import { balanceAtom, transactionUpdateAtom } from "../store/accountAtom";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Avvvatars from "avvvatars-react";
+import { ScaleLoader } from "react-spinners";
 
 const Dashboard = () => {
   const jwt = localStorage.getItem("jwt");
@@ -22,6 +23,8 @@ const Dashboard = () => {
     useRecoilState(currentUserAtom);
   const [users, setUsers] = useRecoilState(usersAtom);
   const [search, setSearch] = useRecoilState(searchAtom);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const fetchBalance = async () => {
@@ -66,6 +69,7 @@ const Dashboard = () => {
 
   const findUsers = async (e) => {
     try {
+      setIsLoading(true);
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${baseUrl}/user/bulk?filter=${search}`, {
         method: "GET",
@@ -78,7 +82,10 @@ const Dashboard = () => {
 
       setUsers(data);
     } catch (error) {
+      setIsLoading(false);
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,7 +116,7 @@ const Dashboard = () => {
   }, []);
 
   const logout = () => {
-    localStorage.setItem("jwt", null);
+    localStorage.removeItem("jwt");
     toast.remove("Logged out");
     navigate("/signin");
   };
@@ -177,11 +184,15 @@ const Dashboard = () => {
               }}
             />
           </div>
-          <div className="mt-10 flex flex-col gap-y-7">
-            {users.map((user) => {
-              return <User user={user} key={user.username} />;
-            })}
-          </div>
+          {isLoading ? (
+            <ScaleLoader color="black" className="flex justify-center" />
+          ) : (
+            <div className="mt-10 flex flex-col gap-y-7">
+              {users.map((user) => {
+                return <User user={user} key={user.username} />;
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
