@@ -22,7 +22,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const fetchBalance = async () => {
-    console.log("fetching balance");
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
     const url = `${baseUrl}/account/balance`;
 
@@ -40,7 +39,6 @@ const Dashboard = () => {
   };
 
   const getCurrentUser = async () => {
-    console.log("getting current user");
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
     const url = `${baseUrl}/user/currentUser`;
 

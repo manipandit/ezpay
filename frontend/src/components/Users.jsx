@@ -5,7 +5,6 @@ import User from "./User";
 import { ScaleLoader } from "react-spinners";
 
 const Users = () => {
-  console.log("users component re rendered");
   const users = useRecoilValue(usersAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
 

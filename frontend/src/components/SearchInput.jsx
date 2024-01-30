@@ -9,9 +9,6 @@ const SearchInput = () => {
   const setIsLoading = useSetRecoilState(isLoadingAtom);
 
   const findUsers = async (e) => {
-    console.log("finding users");
-    console.log("searchval: ", search);
-
     try {
       setIsLoading(true);
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
