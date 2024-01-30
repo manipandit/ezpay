@@ -5,6 +5,7 @@ import { usersAtom } from "../store/userAtom";
 import { useRecoilState } from "recoil";
 import toast from "react-hot-toast";
 import { transactionUpdateAtom } from "../store/accountAtom";
+import axios from "axios";
 
 const SendMoney = ({ user, setShowSetMoney }) => {
   const { firstName, lastName, _id } = user;
@@ -20,35 +21,39 @@ const SendMoney = ({ user, setShowSetMoney }) => {
   const transferAmount = async (amount, _id) => {
     try {
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`${baseUrl}/account/transfer`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: "Bearer " + localStorage.getItem("jwt"),
-        },
-        body: JSON.stringify({
+      const url = `${baseUrl}/account/transfer`;
+
+      const response = await axios.post(
+        url,
+        {
           to: _id,
           amount: parseInt(amount),
-        }),
-      });
-      const data = await response.json();
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: "Bearer " + localStorage.getItem("jwt"),
+          },
+        }
+      );
 
-      data?.flag === "insufficient"
-        ? setSufficientBalance(false)
-        : setSufficientBalance(true);
+      const data = response.data;
+      console.log(data);
 
       if (data?.success) {
         setSuccess(true);
+        setSufficientBalance(true);
         toast.success(
           `Amount Transferred to ${firstName?.toUpperCase()} ${lastName?.toUpperCase()} successfully`
         );
         setTransactionUpdate(!transactionUpdate);
-      } else {
-        setSuccess(false);
-        toast.error(`Insufficient funds to transfer`);
       }
     } catch (error) {
-      console.log(error.message);
+      if (error.response.data?.flag === "insufficient")
+        setSufficientBalance(false);
+
+      setSuccess(false);
+      toast.error(`Insufficient funds to transfer`);
     }
   };
   return (

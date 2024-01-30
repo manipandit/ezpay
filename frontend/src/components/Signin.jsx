@@ -4,6 +4,7 @@ import { signinAtom } from "../store/userAtom";
 import { useRecoilState } from "recoil";
 import toast from "react-hot-toast";
 import { ScaleLoader } from "react-spinners";
+import axios from "axios";
 
 const Signin = () => {
   const [signinValue, setSigninValue] = useRecoilState(signinAtom);
@@ -15,14 +16,10 @@ const Signin = () => {
     try {
       setIsLoading(true);
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`${baseUrl}/user/signin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signinValue),
-      });
-      const data = await response.json();
+      const url = `${baseUrl}/user/signin`;
+
+      const { data } = await axios.post(url, signinValue);
+
       if (data.success) {
         toast.success("User signed in successfully");
         localStorage.setItem("jwt", data.token);

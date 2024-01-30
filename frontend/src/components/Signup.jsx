@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
+import axios from "axios";
 
 const Signup = () => {
   const [signupValue, setSignupValue] = useRecoilState(signupAtom);
@@ -15,14 +16,10 @@ const Signup = () => {
     try {
       setIsLoading(true);
       const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`${baseUrl}/user/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signupValue),
-      });
-      const data = await response.json();
+      const url = `${baseUrl}/user/signup`;
+
+      const { data } = await axios.post(url, signupValue);
+
       if (data.success) {
         toast.success("User signed up successfully");
         setSignupValue({

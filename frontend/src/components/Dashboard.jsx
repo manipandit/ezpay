@@ -1,43 +1,36 @@
 import React, { useEffect, useState } from "react";
-import User from "./User";
 import { useRecoilValue, useRecoilState } from "recoil";
-import {
-  signupAtom,
-  currentUserAtom,
-  usersAtom,
-  searchAtom,
-} from "../store/userAtom";
+import { signupAtom, currentUserAtom } from "../store/userAtom";
 import { balanceAtom, transactionUpdateAtom } from "../store/accountAtom";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Avvvatars from "avvvatars-react";
-import { ScaleLoader } from "react-spinners";
+import axios from "axios";
+import SearchInput from "./SearchInput";
+import Users from "./Users";
 
 const Dashboard = () => {
-  const jwt = localStorage.getItem("jwt");
+  console.log("dashboard rerendered");
+  const [balanceValue, setBalanceValue] = useState(0);
+
+  const transactionUpdate = useRecoilValue(transactionUpdateAtom);
   const userInfo = useRecoilValue(signupAtom);
 
-  const [balanceValue, setBalanceValue] = useState(0);
-  const transactionUpdate = useRecoilValue(transactionUpdateAtom);
   const [currentUserValue, setCurrentUserValue] =
     useRecoilState(currentUserAtom);
-  const [users, setUsers] = useRecoilState(usersAtom);
-  const [search, setSearch] = useRecoilState(searchAtom);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const fetchBalance = async () => {
-    const baseUrl = import.meta.env.VITE_BACKEND_URL;
-    const response = await fetch(`${baseUrl}/account/balance`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
 
+  const fetchBalance = async () => {
+    console.log("fetching balance");
+    const baseUrl = import.meta.env.VITE_BACKEND_URL;
+    const url = `${baseUrl}/account/balance`;
+
+    const { data } = await axios.get(url, {
+      headers: {
         authorization: "Bearer " + localStorage.getItem("jwt"),
       },
     });
-    const data = await response.json();
 
     if (data) {
       if (data?.balance !== balanceValue.balance) {
@@ -47,16 +40,15 @@ const Dashboard = () => {
   };
 
   const getCurrentUser = async () => {
+    console.log("getting current user");
     const baseUrl = import.meta.env.VITE_BACKEND_URL;
-    const response = await fetch(`${baseUrl}/user/currentUser`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const url = `${baseUrl}/user/currentUser`;
 
+    const { data } = await axios.get(url, {
+      headers: {
         authorization: "Bearer " + localStorage.getItem("jwt"),
       },
     });
-    const data = await response.json();
 
     if (data) {
       setCurrentUserValue({
@@ -67,52 +59,12 @@ const Dashboard = () => {
     }
   };
 
-  const findUsers = async (e) => {
-    try {
-      setIsLoading(true);
-      const baseUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(`${baseUrl}/user/bulk?filter=${search}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: "Bearer " + localStorage.getItem("jwt"),
-        },
-      });
-      const data = await response.json();
-
-      setUsers(data);
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    fetchBalance();
+  }, [transactionUpdate]);
 
   useEffect(() => {
-    if (jwt) {
-      fetchBalance();
-    } else {
-      // Redirect to signin page if JWT is null
-      navigate("/signin");
-    }
-  }, [transactionUpdate, jwt]);
-
-  useEffect(() => {
-    if (jwt) {
-      getCurrentUser();
-    } else {
-      // Redirect to signin page if JWT is null
-      navigate("/signin");
-    }
-  }, []);
-  useEffect(() => {
-    if (jwt) {
-      findUsers();
-    } else {
-      // Redirect to signin page if JWT is null
-      navigate("/signin");
-    }
+    getCurrentUser();
   }, []);
 
   const logout = () => {
@@ -171,28 +123,11 @@ const Dashboard = () => {
         <div className="px-4">
           <div className="text-xl font-bold">Users</div>
           <div className="w-full pt-4">
-            <input
-              type="text"
-              placeholder="Search users.."
-              id="search"
-              value={search}
-              className="py-2 px-4 border border-slate-300 w-full focus:outline-slate-300"
-              onChange={(e) => {
-                console.log(search);
-                setSearch(e.target.value);
-                findUsers();
-              }}
-            />
+            <SearchInput />
           </div>
-          {isLoading ? (
-            <ScaleLoader color="black" className="flex justify-center" />
-          ) : (
-            <div className="mt-10 flex flex-col gap-y-7">
-              {users.map((user) => {
-                return <User user={user} key={user.username} />;
-              })}
-            </div>
-          )}
+          <div>
+            <Users />
+          </div>
         </div>
       </div>
     </div>

@@ -34,3 +34,8 @@ export const searchAtom = atom({
   key: "searchAtom",
   default: "",
 });
+
+export const isLoadingAtom = atom({
+  key: "isLoadingAtom",
+  default: true,
+});
